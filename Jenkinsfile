@@ -1,35 +1,47 @@
 pipeline {
-    parameters {
-        booleanParam(name: 'autoApprove', defaultValue: 'fals', description: 'automatically run apply after generating plan') ')
-    }
-    environment {
-        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
-        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY') 
-    }
     agent any
+
+    parameters {
+        booleanParam(
+            name: 'AUTO_APPROVE',
+            defaultValue: false,
+            description: 'Automatically run terraform apply'
+        )
+    }
+
+    environment {
+        AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+        AWS_DEFAULT_REGION    = 'ap-south-1'
+    }
+
     stages {
-        stage('checkout git repo') {
+
+        stage('Checkout Git Repo') {
             steps {
                 git 'https://github.com/bk-thakur/terraform-jenkins.git'
             }
         }
 
-        stage ('terraform init') {
+        stage('Terraform Init') {
             steps {
                 sh 'terraform init'
-            
             }
         }
-        stage ('terraform plan') {
+
+        stage('Terraform Plan') {
             steps {
                 sh 'terraform plan'
             }
         }
-        stage ('terraform apply') {
+
+        stage('Terraform Apply') {
+            when {
+                expression { params.AUTO_APPROVE == true }
+            }
             steps {
-                sh 'terraform apply -auto-approve ${params.autoApprove}'
+                sh 'terraform apply -auto-approve'
             }
         }
-
     }
 }
