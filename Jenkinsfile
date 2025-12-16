@@ -10,11 +10,11 @@ pipeline {
     stages {
         stage('checkout git repo') {
             steps {
-                git "https://github.com/bk-thakur/terraform-jenkins.git"
+                git 'https://github.com/bk-thakur/terraform-jenkins.git'
             }
         }
 
-        stage ("terraform init") {
+        stage ('terraform init') {
             steps {
                 sh 'terraform init'
             
