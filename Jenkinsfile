@@ -19,7 +19,7 @@ pipeline {
 
         stage('Checkout Git Repo') {
             steps {
-                git 'https://github.com/bk-thakur/terraform-jenkins.git'
+                git branch: 'main', url: 'https://github.com/bk-thakur/terraform-jenkins.git'
             }
         }
 
